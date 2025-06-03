@@ -18,6 +18,7 @@ const currentTempButton = document.getElementById("currentTempButton");
 
 //function for update the temperature and display
 const updateTempDisplay = () => {
+  cityNameInput.value = "Seattle";
   const temp = state.temperature;
   tempValue.textContent = `${temp}°C`;
 
@@ -57,11 +58,12 @@ decreaseBtn.addEventListener("click", () => {
 // Update the name of the city in real time
 cityNameInput.addEventListener("input", () => {
   headerCityName.textContent = cityNameInput.value;
+  
 });
 
 // Reset name of the city clicking the button "Reset"
 cityNameReset.addEventListener("click", () => {
-  cityNameInput.value = "";
+  cityNameInput.value = "Seattle";
   headerCityName.textContent = "";
 });
 
