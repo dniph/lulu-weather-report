@@ -13,6 +13,8 @@ const decreaseBtn = document.getElementById("decreaseTempControl");
 const headerCityName = document.getElementById("headerCityName");
 const cityNameInput = document.getElementById("cityNameInput");
 const cityNameReset = document.getElementById("cityNameReset");
+// Gets the temperature 
+const currentTempButton = document.getElementById("currentTempButton");
 
 //function for update the temperature and display
 const updateTempDisplay = () => {
@@ -63,5 +65,37 @@ cityNameReset.addEventListener("click", () => {
   headerCityName.textContent = "";
 });
 
+currentTempButton.addEventListener("click", async () => {
+  const city = headerCityName.textContent || "Seattle"; // default en caso de estar vacío
+
+  try {
+    // Paso 1: Obtener lat y lon
+    const locationRes = await axios.get('http://127.0.0.1:5000/location', {
+      params: {
+        q: city
+      }
+    });
+
+    const { lat, lon } = locationRes.data[0];
+
+    // Paso 2: Obtener clima actual
+    const weatherRes = await axios.get(`http://127.0.0.1:5000/weather`, {
+      params: {
+        lat,
+        lon,
+      },
+    });
+
+    // Paso 3: Convertir de Kelvin a Celsius
+    const kelvinTemp = weatherRes.data.main.temp;
+    const celsiusTemp = Math.round(kelvinTemp - 273.15);
+
+    // Paso 4: Actualizar estado y UI
+    state.temperature = celsiusTemp;
+    updateTempDisplay();
+  } catch (error) {
+    console.error("Error fetching temperature:", error);
+  }
+});
 
 updateTempDisplay();
