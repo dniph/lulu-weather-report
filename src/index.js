@@ -16,11 +16,16 @@ const cityNameReset = document.getElementById("cityNameReset");
 // Gets the temperature 
 const currentTempButton = document.getElementById("currentTempButton");
 
+// Select bar 
+const skySelect = document.getElementById("skySelect");
+const skyDisplay = document.getElementById("sky");
+
 //function for update the temperature and display
 const updateTempDisplay = () => {
-  cityNameInput.value = "Seattle";
+
   const temp = state.temperature;
   tempValue.textContent = `${temp}°C`;
+  
 
   if (temp >= 27) {
     tempValue.className = "red";
@@ -40,6 +45,21 @@ const updateTempDisplay = () => {
   }
 };
 
+const updateSky = () => {
+  const sky = skySelect.value;
+
+  if (sky === "sunny") {
+    skyDisplay.textContent = "☁️ ☁️ ☁️ ☀️ ☁️ ☁️";
+  } else if (sky === "cloudy") {
+    skyDisplay.textContent = "☁️☁️ ☁️ ☁️☁️ ☁️ 🌤 ☁️ ☁️☁️";
+  } else if (sky === "rainy") {
+    skyDisplay.textContent = "🌧🌈⛈🌧🌧💧⛈🌧🌦🌧💧🌧🌧";
+  } else if (sky === "snowy") {
+    skyDisplay.textContent = "🌨❄️🌨🌨❄️❄️🌨❄️🌨❄️❄️🌨🌨";
+  } else {
+    skyDisplay.textContent = ""; // default vacío si no hay selección
+  }
+};
 
 //Listeners
 
@@ -64,8 +84,10 @@ cityNameInput.addEventListener("input", () => {
 // Reset name of the city clicking the button "Reset"
 cityNameReset.addEventListener("click", () => {
   cityNameInput.value = "Seattle";
-  headerCityName.textContent = "";
+  headerCityName.textContent = "Seattle";
 });
+
+skySelect.addEventListener("change", updateSky);
 
 currentTempButton.addEventListener("click", async () => {
   const city = headerCityName.textContent || "Seattle"; // default en caso de estar vacío
@@ -100,4 +122,7 @@ currentTempButton.addEventListener("click", async () => {
   }
 });
 
+
 updateTempDisplay();
+updateSky();
+
