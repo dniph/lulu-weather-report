@@ -9,7 +9,12 @@ const landscape = document.getElementById("landscape");
 //Increase and decrease buttons
 const increaseBtn = document.getElementById("increaseTempControl");
 const decreaseBtn = document.getElementById("decreaseTempControl");
+// Handles Input related with the city 
+const headerCityName = document.getElementById("headerCityName");
+const cityNameInput = document.getElementById("cityNameInput");
+const cityNameReset = document.getElementById("cityNameReset");
 
+//function for update the temperature and display
 const updateTempDisplay = () => {
   const temp = state.temperature;
   tempValue.textContent = `${temp}°C`;
@@ -45,6 +50,17 @@ increaseBtn.addEventListener("click", () => {
 decreaseBtn.addEventListener("click", () => {
   state.temperature -= 1;
   updateTempDisplay();
+});
+
+// Update the name of the city in real time
+cityNameInput.addEventListener("input", () => {
+  headerCityName.textContent = cityNameInput.value;
+});
+
+// Reset name of the city clicking the button "Reset"
+cityNameReset.addEventListener("click", () => {
+  cityNameInput.value = "";
+  headerCityName.textContent = "";
 });
 
 
