@@ -1,6 +1,7 @@
 //Global state variable for temperature
 let state = {
-  temperature: 21 // Valor inicial en °C
+  temperature: 21, // Valor inicial en °C
+  isCelsius: true
 };
 //Get the:
 //Temperature and state values 
@@ -15,34 +16,53 @@ const cityNameInput = document.getElementById("cityNameInput");
 const cityNameReset = document.getElementById("cityNameReset");
 // Gets the temperature 
 const currentTempButton = document.getElementById("currentTempButton");
-
+//Convert C/F 
+const convertTempButton = document.getElementById("convertTempButton");
 // Select bar 
 const skySelect = document.getElementById("skySelect");
 const skyDisplay = document.getElementById("sky");
 
+
 //function for update the temperature and display
 const updateTempDisplay = () => {
 
-  const temp = state.temperature;
-  tempValue.textContent = `${temp}°C`;
+  const {temperature, isCelsius} = state;
+  // const temperature = state.temperature;
+  tempValue.textContent = isCelsius ? `${temperature}°C` : `${temperature}°F`;
   
-
-  if (temp >= 27) {
+  if (temperature >= 27) {
     tempValue.className = "red";
     landscape.textContent = "🌵__🐍_🦂_🌵🌵__🐍_🏜_🦂";
-  } else if (temp >= 21) {
+  } else if (temperature >= 21) {
     tempValue.className = "orange";
     landscape.textContent = "🌸🌿🌼__🌷🌻🌿_☘️🌱_🌻🌷";
-  } else if (temp >= 15) {
+  } else if (temperature >= 15) {
     tempValue.className = "yellow";
     landscape.textContent = "🌾🌾_🍃_🪨__🛤_🌾🌾🌾_🍃";
-  } else if (temp >= 10) {
+  } else if (temperature >= 10) {
     tempValue.className = "green";
     landscape.textContent = "🌲🌲⛄️🌲⛄️🍂🌲🍁🌲🌲⛄️🍂🌲";
   } else {
     tempValue.className = "teal";
     landscape.textContent = "🌲🌲⛄️🌲❄️🌬️⛄️🌲❄️⛄️🌲";
   }
+};
+
+const convertTemp = () => {
+  const temperatureHeader = document.getElementById("temperatureHeader");
+
+  if (state.isCelsius) {
+    state.temperature = Math.round(state.temperature * 9 / 5 + 32);
+    convertTempButton.textContent = "Convert to °C";
+    temperatureHeader.textContent = "Temperature (°F)";
+  } else {
+    state.temperature = Math.round((state.temperature - 32) * 5 / 9);
+    convertTempButton.textContent = "Convert to °F";
+    temperatureHeader.textContent = "Temperature (°C)";
+  }
+
+  state.isCelsius = !state.isCelsius;
+  updateTempDisplay();
 };
 
 const updateSky = () => {
@@ -109,7 +129,7 @@ currentTempButton.addEventListener("click", async () => {
         lon,
       },
     });
-
+    
     // Paso 3: Convertir de Kelvin a Celsius
     const kelvinTemp = weatherRes.data.main.temp;
     const celsiusTemp = Math.round(kelvinTemp - 273.15);
@@ -122,7 +142,7 @@ currentTempButton.addEventListener("click", async () => {
   }
 });
 
+convertTempButton.addEventListener("click", convertTemp);
 
 updateTempDisplay();
 updateSky();
-
