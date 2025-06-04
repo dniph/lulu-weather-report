@@ -75,13 +75,11 @@ const convertTemp = () => {
   state.isCelsius = !state.isCelsius;
 
   if (state.isCelsius) {
-    state.temperature = Math.round(state.temperature * 9 / 5 + 32);
-    convertTempButton.textContent = "Convert to °C";
-    temperatureHeader.textContent = "Temperature (°F)";
-  } else {
-    state.temperature = Math.round((state.temperature - 32) * 5 / 9);
     convertTempButton.textContent = "Convert to °F";
     temperatureHeader.textContent = "Temperature (°C)";
+  } else {
+    convertTempButton.textContent = "Convert to °C";
+    temperatureHeader.textContent = "Temperature (°F)";
   }
 
   updateTempDisplay();
