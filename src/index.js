@@ -1,6 +1,6 @@
 //Global state variable for temperature
 let state = {
-  temperature: 21, // Valor inicial en °C
+  temperatureK: 294.15, // Valor inicial en °K
   isCelsius: true
 };
 //Get the:
@@ -25,44 +25,32 @@ const skyDisplay = document.getElementById("sky");
 
 //function for update the temperature and display
 const updateTempDisplay = () => {
-
-  const {temperature, isCelsius} = state;
+const {isCelsius, temperatureK} = state;
+let temperature;
+if (isCelsius){
+  temperature = getTempInCelsius();
+} else {
+  temperature = getTempInFahrenheit();
+}
   // const temperature = state.temperature;
   tempValue.textContent = isCelsius ? `${temperature}°C` : `${temperature}°F`;
   
-  if (temperature >= 27) {
+  if (temperatureK >= 300.15) {
     tempValue.className = "red";
     landscape.textContent = "🌵__🐍_🦂_🌵🌵__🐍_🏜_🦂";
-  } else if (temperature >= 21) {
+  } else if (temperatureK >= 294.15) {
     tempValue.className = "orange";
     landscape.textContent = "🌸🌿🌼__🌷🌻🌿_☘️🌱_🌻🌷";
-  } else if (temperature >= 15) {
+  } else if (temperatureK >= 288.15) {
     tempValue.className = "yellow";
     landscape.textContent = "🌾🌾_🍃_🪨__🛤_🌾🌾🌾_🍃";
-  } else if (temperature >= 10) {
+  } else if (temperatureK >= 283.15) {
     tempValue.className = "green";
     landscape.textContent = "🌲🌲⛄️🌲⛄️🍂🌲🍁🌲🌲⛄️🍂🌲";
   } else {
     tempValue.className = "teal";
     landscape.textContent = "🌲🌲⛄️🌲❄️🌬️⛄️🌲❄️⛄️🌲";
   }
-};
-
-const convertTemp = () => {
-  const temperatureHeader = document.getElementById("temperatureHeader");
-
-  if (state.isCelsius) {
-    state.temperature = Math.round(state.temperature * 9 / 5 + 32);
-    convertTempButton.textContent = "Convert to °C";
-    temperatureHeader.textContent = "Temperature (°F)";
-  } else {
-    state.temperature = Math.round((state.temperature - 32) * 5 / 9);
-    convertTempButton.textContent = "Convert to °F";
-    temperatureHeader.textContent = "Temperature (°C)";
-  }
-
-  state.isCelsius = !state.isCelsius;
-  updateTempDisplay();
 };
 
 const updateSky = () => {
@@ -81,17 +69,57 @@ const updateSky = () => {
   }
 };
 
+const convertTemp = () => {
+  const temperatureHeader = document.getElementById("temperatureHeader");
+
+  state.isCelsius = !state.isCelsius;
+
+  if (state.isCelsius) {
+    state.temperature = Math.round(state.temperature * 9 / 5 + 32);
+    convertTempButton.textContent = "Convert to °C";
+    temperatureHeader.textContent = "Temperature (°F)";
+  } else {
+    state.temperature = Math.round((state.temperature - 32) * 5 / 9);
+    convertTempButton.textContent = "Convert to °F";
+    temperatureHeader.textContent = "Temperature (°C)";
+  }
+
+  updateTempDisplay();
+};
+//Auxiliar function for C and F 
+const getTempInCelsius = () => Math.round(state.temperatureK - 273.15);
+const getTempInFahrenheit = () => Math.round((state.temperatureK - 273.15) * 9/5 + 32);
+const getCelsiusToKelvin = ( temperatureC) => temperatureC + 273.15;
+const getFahrenheitToKelvin = (temperatureF) => ((temperatureF - 32) * 5) / 9 + 273.15;
+
+
 //Listeners
 
 //Increase temperature with button
 increaseBtn.addEventListener("click", () => {
-  state.temperature += 1;
+  if (state.isCelsius){
+    let temp = getTempInCelsius();
+    temp ++;
+    state.temperatureK = getCelsiusToKelvin(temp);
+  } else {
+    let temp = getTempInFahrenheit();
+    temp ++
+    state.temperatureK = getFahrenheitToKelvin(temp);
+  }
   updateTempDisplay();
 });
 
 // Decrease temperature with button
 decreaseBtn.addEventListener("click", () => {
-  state.temperature -= 1;
+  if (state.isCelsius){
+    let temp = getTempInCelsius();
+    temp --;
+    state.temperatureK = getCelsiusToKelvin(temp);
+  } else {
+    let temp = getTempInFahrenheit();
+    temp --;
+    state.temperatureK = getFahrenheitToKelvin(temp);
+  }
   updateTempDisplay();
 });
 
@@ -135,7 +163,7 @@ currentTempButton.addEventListener("click", async () => {
     const celsiusTemp = Math.round(kelvinTemp - 273.15);
 
     // Paso 4: Actualizar estado y UI
-    state.temperature = celsiusTemp;
+    state.temperatureK = celsiusTemp;
     updateTempDisplay();
   } catch (error) {
     console.error("Error fetching temperature:", error);
