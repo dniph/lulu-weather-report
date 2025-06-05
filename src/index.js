@@ -95,6 +95,7 @@ const getFahrenheitToKelvin = (temperatureF) => ((temperatureF - 32) * 5) / 9 + 
 
 //Increase temperature with button
 increaseBtn.addEventListener("click", () => {
+  
   if (state.isCelsius){
     let temp = getTempInCelsius();
     temp ++;
@@ -140,7 +141,7 @@ currentTempButton.addEventListener("click", async () => {
 
   try {
     // Paso 1: Obtener lat y lon
-    const locationRes = await axios.get('http://127.0.0.1:5000/location', {
+    const locationRes = await axios.get('https://lulu-weather-locations-app-bddkhmhtetfbbzf6.canadacentral-01.azurewebsites.net//location', {
       params: {
         q: city
       }
@@ -149,7 +150,7 @@ currentTempButton.addEventListener("click", async () => {
     const { lat, lon } = locationRes.data[0];
 
     // Paso 2: Obtener clima actual
-    const weatherRes = await axios.get(`http://127.0.0.1:5000/weather`, {
+    const weatherRes = await axios.get(`https://lulu-weather-locations-app-bddkhmhtetfbbzf6.canadacentral-01.azurewebsites.net//weather`, {
       params: {
         lat,
         lon,
@@ -161,7 +162,7 @@ currentTempButton.addEventListener("click", async () => {
     const celsiusTemp = Math.round(kelvinTemp - 273.15);
 
     // Paso 4: Actualizar estado y UI
-    state.temperatureK = celsiusTemp;
+    state.temperatureK = kelvinTemp;
     updateTempDisplay();
   } catch (error) {
     console.error("Error fetching temperature:", error);
